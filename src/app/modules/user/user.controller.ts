@@ -1,24 +1,25 @@
-import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { User } from "./user.model";
+import { userSevices } from "./user.service";
+import { catchAsync } from "../../../utils/catchAsync";
 
-const createUser = async (req: Request, res: Response) => {
-  try {
-    const { email, name } = req.body;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const createUser = catchAsync(async (req, res, next) => {
+  const user = await userSevices.createUser(req.body);
+  res.status(StatusCodes.OK).json({
+    message: "User created successfully",
+    user: user,
+  });
+});
 
-    const user = await User.create({ email, name });
-    res.status(StatusCodes.OK).json({
-      message: "User created successfully",
-      user: user,
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(StatusCodes.BAD_REQUEST).json({
-      message: `Somthing is wrong with your request ${error}`,
-    });
-  }
-};
+const getAllUsers = catchAsync(async (req, res, next) => {
+  const user = await userSevices.getAllUsers();
+  res.status(StatusCodes.OK).json({
+    message: "User get c successfully",
+    user: user,
+  });
+});
 
 export const userController = {
   createUser,
+  getAllUsers,
 };
